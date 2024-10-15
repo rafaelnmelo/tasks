@@ -11,6 +11,7 @@ import monthImage from '../../assets/imgs/month.jpg'
 
 import moment from 'moment'
 import 'moment/locale/pt-br'
+import commonStyles from "../commonStyles"
 
 export default class TaskList extends Component {
     render() {
