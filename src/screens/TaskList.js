@@ -11,6 +11,8 @@ import monthImage from '../../assets/imgs/month.jpg'
 
 import moment from 'moment'
 import 'moment/locale/pt-br'
+
+import Task from "../components/Task"
 import commonStyles from "../commonStyles"
 
 export default class TaskList extends Component {
@@ -30,9 +32,10 @@ export default class TaskList extends Component {
                     </View>
                 </ImageBackground>
                 <View style={styles.taskList}>
-                    <Text>Tarefa #01</Text>
-                    <Text>Tarefa #02</Text>
-                    <Text>Tarefa #03</Text>
+                    <Task desc='Comprar livro' estimateAt={new Date()}
+                        doneAt={new Date()} />
+                    <Task desc='Ler livro' estimateAt={new Date()}
+                        doneAt={null} />
                 </View>
             </View>
         )
