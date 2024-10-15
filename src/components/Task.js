@@ -9,21 +9,30 @@ import commonStyles from "../commonStyles"
 
 export default props => {
 
+    const doneOrNotStyle = props.doneAt != null ?
+        { textDecorationLine: 'line-through' } : {}
+
+    const date = props.doneAt ? props.doneAt : props.estimateAt
+    const formattedDate = moment(date).locale('pt-br')
+        .format('ddd, D [de] MMMM')
+
     return (
         <View style={styles.container}>
             <View style={styles.checkContainer}>
                 {getCheckView(props.doneAt)}
             </View>
             <View>
-                <Text>{props.desc}</Text>
-                <Text>{props.estimateAt + ''}</Text>
+                <Text style={[styles.desc, doneOrNotStyle]}>
+                    {props.desc}
+                </Text>
+                <Text style={styles.date}>{formattedDate}</Text>
             </View>
-        </View>
+        </View >
     )
 }
 
 function getCheckView(doneAt) {
-    if(doneAt != null) {
+    if (doneAt != null) {
         return (
             <View style={styles.done}>
                 <Icon name='check' size={20} color='#FFF'></Icon>
