@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import {
     View, Text, ImageBackground,
-    StyleSheet
+    StyleSheet, FlatList
 } from "react-native"
 
 import todayImage from '../../assets/imgs/today.jpg'
@@ -16,6 +16,21 @@ import Task from "../components/Task"
 import commonStyles from "../commonStyles"
 
 export default class TaskList extends Component {
+
+    state = {
+        tasks: [{
+            id: Math.random(),
+            desc: 'Comprar livro de React Native',
+            estimateAt: new Date(),
+            doneAt: new Date()
+        }, {
+            id: Math.random(),
+            desc: 'Ler livro de React Native',
+            estimateAt: new Date(),
+            doneAt: null
+        }]
+    }
+
     render() {
         const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
         return (
@@ -32,10 +47,11 @@ export default class TaskList extends Component {
                     </View>
                 </ImageBackground>
                 <View style={styles.taskList}>
-                    <Task desc='Comprar livro' estimateAt={new Date()}
-                        doneAt={new Date()} />
-                    <Task desc='Ler livro' estimateAt={new Date()}
-                        doneAt={null} />
+                    <FlatList data={this.state.tasks} //lista pura de objetos chave/valor
+                        keyExtractor={item => `${item.id}`} //pegando o id para renderização
+                        renderItem={({ item }) => <Task {...item} //desestrutura o item de dentro do obj
+                        //utiliza o spread para passar cada atributo para Task
+                        />} />
                 </View>
             </View>
         )
