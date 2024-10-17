@@ -5,7 +5,6 @@ import {
     Platform
 } from "react-native"
 
-// import { Icon } from '@rneui/themed'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import todayImage from '../../assets/imgs/today.jpg'
@@ -22,6 +21,7 @@ import commonStyles from "../commonStyles"
 export default class TaskList extends Component {
     state = {
         showDoneTasks: true,
+        visibleTasks: [],
         tasks: [{
             id: Math.random(),
             desc: 'Comprar livro de React Native',
@@ -35,6 +35,10 @@ export default class TaskList extends Component {
         }]
     }
 
+    componentDidMount = () => {
+        this.filterTasks()
+    }
+
     toggleTask = taskId => {
         const tasks = [...this.state.tasks]
         tasks.forEach(task => {
@@ -43,11 +47,25 @@ export default class TaskList extends Component {
             }
         })
 
-        this.setState({ tasks })
+        this.setState({ tasks }, this.filterTasks)
     }
 
     toggleFilter = () => {
-        this.setState({ showDoneTasks: !this.state.showDoneTasks })
+        this.setState({ showDoneTasks: !this.state.showDoneTasks },
+            this.filterTasks)
+    }
+
+    filterTasks = () => {
+        let visibleTasks = null
+
+        if (this.state.showDoneTasks) {
+            visibleTasks = { ...this.state.tasks }
+        } else {
+            const pending = task => task.doneAt === null
+            visibleTasks = this.state.tasks.filter(pending)
+        }
+
+        this.setState({ visibleTasks })
     }
 
     render() {
@@ -70,7 +88,7 @@ export default class TaskList extends Component {
                     </View>
                 </ImageBackground>
                 <View style={styles.taskList}>
-                    <FlatList data={this.state.tasks} //lista pura de objetos chave/valor
+                    <FlatList data={this.state.visibleTasks} //lista pura de objetos chave/valor
                         keyExtractor={item => `${item.id}`} //pegando o id para renderização
                         renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} //desestrutura o item de dentro do obj
                         //utiliza o spread para passar cada atributo para Task
