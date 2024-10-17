@@ -1,8 +1,12 @@
 import React, { Component } from "react"
 import {
     View, Text, ImageBackground,
-    StyleSheet, FlatList
+    StyleSheet, FlatList, TouchableOpacity,
+    Platform
 } from "react-native"
+
+// import { Icon } from '@rneui/themed'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import todayImage from '../../assets/imgs/today.jpg'
 import tomorrowImage from '../../assets/imgs/tomorrow.jpg'
@@ -16,8 +20,8 @@ import Task from "../components/Task"
 import commonStyles from "../commonStyles"
 
 export default class TaskList extends Component {
-
     state = {
+        showDoneTasks: true,
         tasks: [{
             id: Math.random(),
             desc: 'Comprar livro de React Native',
@@ -42,19 +46,27 @@ export default class TaskList extends Component {
         this.setState({ tasks })
     }
 
+    toggleFilter = () => {
+        this.setState({ showDoneTasks: !this.state.showDoneTasks })
+    }
+
     render() {
         const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
         return (
             <View style={styles.container}>
                 <ImageBackground source={todayImage}
                     style={styles.background}>
+                    <View style={styles.iconBar}>
+                        <TouchableOpacity onPress={this.toggleFilter}>
+                            <Icon
+                                name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
+                                size={20} color={commonStyles.colors.secondary}
+                            ></Icon>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.titleBar}>
-                        <Text style={styles.title}>
-                            Hoje
-                        </Text>
-                        <Text style={styles.subtitle}>
-                            {today}
-                        </Text>
+                        <Text style={styles.title}>Hoje</Text>
+                        <Text style={styles.subtitle}>{today}</Text>
                     </View>
                 </ImageBackground>
                 <View style={styles.taskList}>
