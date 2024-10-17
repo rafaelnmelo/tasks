@@ -1,5 +1,8 @@
 import React from "react"
-import { View, Text, StyleSheet } from "react-native"
+import {
+    View, Text, StyleSheet,
+    TouchableWithoutFeedback
+} from "react-native"
 import { Icon } from '@rneui/themed'
 
 import moment from 'moment'
@@ -18,9 +21,12 @@ export default props => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.checkContainer}>
-                {getCheckView(props.doneAt)}
-            </View>
+            <TouchableWithoutFeedback
+                onPress={() => props.toggleTask(props.id)}>
+                <View style={styles.checkContainer}>
+                    {getCheckView(props.doneAt)}
+                </View>
+            </TouchableWithoutFeedback>
             <View>
                 <Text style={[styles.desc, doneOrNotStyle]}>
                     {props.desc}
