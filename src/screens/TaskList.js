@@ -22,7 +22,7 @@ import AddTask from "./AddTask"
 export default class TaskList extends Component {
     state = {
         showDoneTasks: true,
-        showAddTask: false,
+        showAddTask: true,
         visibleTasks: [],
         tasks: [{
             id: Math.random(),
