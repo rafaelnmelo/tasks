@@ -1,12 +1,19 @@
 import React, { Component } from "react"
 import {
     Modal, View, StyleSheet,
-    TouchableWithoutFeedback, Text
+    TouchableWithoutFeedback, Text,
+    TouchableOpacity, TextInput
 } from "react-native"
 
 import commonStyles from "../commonStyles"
 
+const initialState = { desc: '' }
+
 export default class AddTask extends Component {
+    state = {
+        ...initialState
+    }
+
     render() {
         return (
             <Modal transparent={true}
@@ -20,6 +27,18 @@ export default class AddTask extends Component {
                 <TouchableWithoutFeedback>
                     <View style={styles.container}>
                         <Text style={styles.header}>Nova Tarefa</Text>
+                        <TextInput style={styles.input}
+                            placeholder="Informe a descrição..."
+                            onChangeText={desc => this.setState({ desc })}
+                            value={this.state.desc} />
+                        <View style={styles.buttons}>
+                            <TouchableOpacity onPress={this.props.onCancel}>
+                                <Text style={styles.button}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Text style={styles.button}>Salvar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback
@@ -37,7 +56,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.7)'
     },
     container: {
-        flex: 1,
         backgroundColor: '#FFF'
     },
     header: {

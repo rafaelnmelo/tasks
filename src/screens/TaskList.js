@@ -22,7 +22,7 @@ import AddTask from "./AddTask"
 export default class TaskList extends Component {
     state = {
         showDoneTasks: true,
-        showAddTask: true,
+        showAddTask: false,
         visibleTasks: [],
         tasks: [{
             id: Math.random(),
@@ -83,7 +83,7 @@ export default class TaskList extends Component {
                             <Icon
                                 name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
                                 size={20} color={commonStyles.colors.secondary}
-                            ></Icon>
+                            />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.titleBar}>
@@ -98,6 +98,14 @@ export default class TaskList extends Component {
                         //utiliza o spread para passar cada atributo para Task
                         />} />
                 </View>
+                <TouchableOpacity style={styles.addButton}
+                    onPress={() => this.setState({ showAddTask: true })}
+                    activeOpacity={0.7}>
+                    <Icon
+                        name='plus' size={20}
+                        color={commonStyles.colors.secondary}
+                    />
+                </TouchableOpacity>
             </View>
         )
     }
@@ -145,6 +153,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         justifyContent: 'center',
+        backgroundColor: commonStyles.colors.today,
         alignItems: 'center'
     }
 })
