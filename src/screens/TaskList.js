@@ -61,7 +61,7 @@ export default class TaskList extends Component {
         let visibleTasks = null
 
         if (this.state.showDoneTasks) {
-            visibleTasks = { ...this.state.tasks }
+            visibleTasks = [ ...this.state.tasks ]
         } else {
             const pending = task => task.doneAt === null
             visibleTasks = this.state.tasks.filter(pending)
