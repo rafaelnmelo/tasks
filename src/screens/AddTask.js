@@ -2,16 +2,45 @@ import React, { Component } from "react"
 import {
     Modal, View, StyleSheet,
     TouchableWithoutFeedback, Text,
-    TouchableOpacity, TextInput
+    TouchableOpacity, TextInput, Platform
 } from "react-native"
+
+import DateTimePicker from '@react-native-community/datetimepicker'
+import moment from "moment"
 
 import commonStyles from "../commonStyles"
 
-const initialState = { desc: '' }
+const initialState = { desc: '', date: new Date(), showDatePicker: false }
 
 export default class AddTask extends Component {
     state = {
         ...initialState
+    }
+
+    getDatePicker = () => {
+        let datePicker = <DateTimePicker
+            value={this.state.date}
+            onChange={(_, date) => this.setState({ date, showDatePicker: false })}
+            mode='date' 
+            timeZoneName={'America/Sao_Paulo'}/>
+
+        const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')
+
+        if (Platform.OS === 'android') {
+            datePicker = (
+                <View>
+                    <TouchableOpacity
+                        onPress={() => this.setState({ showDatePicker: true })}>
+                        <Text style={styles.date}>
+                            {dateString}
+                        </Text>
+                    </TouchableOpacity>
+                    {this.state.showDatePicker && datePicker}
+                </View>
+            )
+        }
+
+        return datePicker
     }
 
     render() {
@@ -31,6 +60,7 @@ export default class AddTask extends Component {
                             placeholder="Informe a descrição..."
                             onChangeText={desc => this.setState({ desc })}
                             value={this.state.desc} />
+                        {this.getDatePicker()}
                         <View style={styles.buttons}>
                             <TouchableOpacity onPress={this.props.onCancel}>
                                 <Text style={styles.button}>Cancelar</Text>
@@ -87,6 +117,7 @@ const styles = StyleSheet.create({
     date: {
         fontFamily: commonStyles.fontFamily,
         fontSize: 20,
-        marginLeft: 15
+        marginRight: 15,
+        textAlign: 'right'
     }
 })
