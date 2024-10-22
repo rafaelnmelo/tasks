@@ -1,9 +1,12 @@
 import React from "react"
 import {
     View, Text, StyleSheet,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    TouchableOpacity
 } from "react-native"
-import { Icon } from '@rneui/themed'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import Swipeable from 'react-native-gesture-handler/Swipeable'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import moment from 'moment'
 import 'moment/locale/pt-br'
@@ -19,21 +22,47 @@ export default props => {
     const formattedDate = moment(date).locale('pt-br')
         .format('ddd, D [de] MMMM')
 
-    return (
-        <View style={styles.container}>
-            <TouchableWithoutFeedback
-                onPress={() => props.toggleTask(props.id)}>
-                <View style={styles.checkContainer}>
-                    {getCheckView(props.doneAt)}
-                </View>
-            </TouchableWithoutFeedback>
-            <View>
-                <Text style={[styles.desc, doneOrNotStyle]}>
-                    {props.desc}
-                </Text>
-                <Text style={styles.date}>{formattedDate}</Text>
+    const getRightContent = () => {
+        return (
+            <TouchableOpacity style={styles.right}
+                onPress={() => props.onDelete && props.onDelete(props.id)}>
+                <Icon name="trash" size={30} color='#FFF' />
+            </TouchableOpacity>
+        )
+    }
+
+    const getLeftContent = () => {
+        return (
+            <View style={styles.left}>
+                <Icon name="trash" size={20} color='#FFF'
+                    style={styles.excludeIcon} />
+                <Text style={styles.excludeText}>Excluir</Text>
             </View>
-        </View >
+        )
+    }
+
+    return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <Swipeable
+                renderRightActions={getRightContent}
+                renderLeftActions={getLeftContent}
+                onSwipeableLeftOpen={() => props.onDelete && props.onDelete(props.id)}>
+                <View style={styles.container}>
+                    <TouchableWithoutFeedback
+                        onPress={() => props.onToggleTask(props.id)}>
+                        <View style={styles.checkContainer}>
+                            {getCheckView(props.doneAt)}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <View>
+                        <Text style={[styles.desc, doneOrNotStyle]}>
+                            {props.desc}
+                        </Text>
+                        <Text style={styles.date}>{formattedDate}</Text>
+                    </View>
+                </View >
+            </Swipeable>
+        </GestureHandlerRootView>
     )
 }
 

@@ -61,7 +61,7 @@ export default class TaskList extends Component {
         let visibleTasks = null
 
         if (this.state.showDoneTasks) {
-            visibleTasks = [ ...this.state.tasks ]
+            visibleTasks = [...this.state.tasks]
         } else {
             const pending = task => task.doneAt === null
             visibleTasks = this.state.tasks.filter(pending)
@@ -85,6 +85,11 @@ export default class TaskList extends Component {
         })
 
         this.setState({ tasks, showAddTask: false }, this.filterTasks)
+    }
+
+    deleteTask = id => {
+        const tasks = this.state.tasks.filter(task => task.id !== id)
+        this.setState({ tasks }, this.filterTasks)
     }
 
     render() {
@@ -112,9 +117,11 @@ export default class TaskList extends Component {
                 <View style={styles.taskList}>
                     <FlatList data={this.state.visibleTasks} //lista pura de objetos chave/valor
                         keyExtractor={item => `${item.id}`} //pegando o id para renderização
-                        renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} //desestrutura o item de dentro do obj
-                        //utiliza o spread para passar cada atributo para Task
-                        />} />
+                        renderItem={({ item }) => <Task //desestrutura o item de dentro do obj
+                            {...item} //utiliza o spread para passar cada atributo para Task
+                            onToggleTask={this.toggleTask}
+                            onDelete={this.deleteTask} />}
+                    />
                 </View>
                 <TouchableOpacity style={styles.addButton}
                     onPress={() => this.setState({ showAddTask: true })}
