@@ -2,12 +2,13 @@ import React, { Component } from "react"
 import {
     View, Text, ImageBackground,
     StyleSheet, FlatList, TouchableOpacity,
-    Platform, Alert, AsyncStorage
+    Platform, Alert
 } from "react-native"
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import 'moment/locale/pt-br'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import todayImage from '../../assets/imgs/today.jpg'
 import tomorrowImage from '../../assets/imgs/tomorrow.jpg'
