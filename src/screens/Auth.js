@@ -11,18 +11,20 @@ import commonStyles from "../commonStyles"
 import AuthInput from "../components/AuthInput"
 import { server, showError, showSuccess } from "../common"
 
+const initialState = {
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    stageNew: false
+}
+
 export default class Auth extends Component {
 
-    state = {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        stageNew: false
-    }
+    state = { ...initialState }
 
     signinOrSignup = () => {
-        this.state.stageNew ? this.signup() : Alert.alert('Sucesso', 'Logar')
+        this.state.stageNew ? this.signup() : this.signin()
     }
 
     signup = async () => {
@@ -34,7 +36,23 @@ export default class Auth extends Component {
                 confirmPassword: this.state.confirmPassword
             })
             showSuccess('Usuário cadastrado!')
-            this.setState({ stageNew: false })
+            this.setState({ ...initialState })
+        } catch (error) {
+            showError(error)
+        }
+    }
+
+    signin = async () => {
+        try {
+            const response = await axios.post(`${server}/signin`, {
+                email: this.state.email,
+                password: this.state.password
+            })
+
+            let authHeader = axios.defaults.headers.common['Authorization']
+            authHeader = `bearer ${response.data.token}`
+
+            this.props.navigation.navigate('Home')
         } catch (error) {
             showError(error)
         }
