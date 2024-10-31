@@ -11,7 +11,7 @@ function showError(error) {
 }
 
 function showSuccess(message) {
-    Alert.alert('Sucesso', msg)
+    Alert.alert('Sucesso', message)
 }
 
 export { server, showError, showSuccess }
