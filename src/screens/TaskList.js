@@ -45,8 +45,8 @@ export default class TaskList extends Component {
         try {
             await axios.put(`${server}/tasks/${taskId}/toggle`)
             this.loadTasks()
-        } catch(error) {
-            showError(error )
+        } catch (error) {
+            showError(error)
         }
     }
 
@@ -98,9 +98,13 @@ export default class TaskList extends Component {
         }
     }
 
-    deleteTask = id => {
-        const tasks = this.state.tasks.filter(task => task.id !== id)
-        this.setState({ tasks }, this.filterTasks)
+    deleteTask = async taskId => {
+        try {
+            await axios.delete(`${server}/tasks/${taskId}`)
+            this.loadTasks()
+        } catch (error) {
+            showError(error)
+        }
     }
 
     render() {
