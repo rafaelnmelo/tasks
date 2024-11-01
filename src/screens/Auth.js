@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import {
     ImageBackground, Text, StyleSheet,
-    View, TouchableOpacity, Alert
+    View, TouchableOpacity
 } from "react-native"
 
 import axios from 'axios'
