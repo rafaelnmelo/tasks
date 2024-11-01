@@ -33,7 +33,7 @@ export default class TaskList extends Component {
 
     componentDidMount = async () => {
         const stateString = await AsyncStorage.getItem('tasksState')
-        const state = JSON.parse(stateString) || initialState
+        const savedState = JSON.parse(stateString) || initialState
         this.setState({
             showDoneTasks: savedState.showDoneTasks
         }, this.filterTasks)
@@ -92,7 +92,7 @@ export default class TaskList extends Component {
 
     loadTasks = async () => {
         try {
-            const maxDate = moment().format('YYY-MM-DD 23:59:59')
+            const maxDate = moment().format('YYYY-MM-DD 23:59:59')
             const response = await axios.get(`${server}/tasks?date=${maxDate}`)
             this.setState({ tasks: response.data }, this.filterTasks)
         } catch (error) {
