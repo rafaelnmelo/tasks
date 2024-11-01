@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import AsyncStorage from '@react-native-community/async-storage'
+import axios from "axios"
 
 import todayImage from '../../assets/imgs/today.jpg'
 import tomorrowImage from '../../assets/imgs/tomorrow.jpg'
@@ -18,6 +19,7 @@ import monthImage from '../../assets/imgs/month.jpg'
 import Task from "../components/Task"
 import commonStyles from "../commonStyles"
 import AddTask from "./AddTask"
+import { server, showError } from "../common"
 
 const initialState = {
     showDoneTasks: true,
@@ -32,7 +34,11 @@ export default class TaskList extends Component {
     componentDidMount = async () => {
         const stateString = await AsyncStorage.getItem('tasksState')
         const state = JSON.parse(stateString) || initialState
-        this.setState(state)
+        this.setState({
+            showDoneTasks: savedState.showDoneTasks
+        }, this.filterTasks)
+
+        this.loadTasks()
     }
 
     toggleTask = taskId => {
@@ -62,7 +68,9 @@ export default class TaskList extends Component {
         }
 
         this.setState({ visibleTasks })
-        AsyncStorage.setItem('tasksState', JSON.stringify(this.state))
+        AsyncStorage.setItem('tasksState', JSON.stringify({
+             showDoneTasks: this.state.showDoneTasks
+        }))
     }
 
     addTask = newTask => {
@@ -80,6 +88,16 @@ export default class TaskList extends Component {
         })
 
         this.setState({ tasks, showAddTask: false }, this.filterTasks)
+    }
+
+    loadTasks = async () => {
+        try {
+            const maxDate = moment().format('YYY-MM-DD 23:59:59')
+            const response = await axios.get(`${server}/tasks?date=${maxDate}`)
+            this.setState({ tasks: response.data }, this.filterTasks)
+        } catch (error) {
+            showError(error)
+        }
     }
 
     deleteTask = id => {
