@@ -41,15 +41,13 @@ export default class TaskList extends Component {
         this.loadTasks()
     }
 
-    toggleTask = taskId => {
-        const tasks = [...this.state.tasks]
-        tasks.forEach(task => {
-            if (task.id === taskId) {
-                task.doneAt = task.doneAt ? null : new Date()
-            }
-        })
-
-        this.setState({ tasks }, this.filterTasks)
+    toggleTask = async taskId => {
+        try {
+            await axios.put(`${server}/tasks/${taskId}/toggle`)
+            this.loadTasks()
+        } catch(error) {
+            showError(error )
+        }
     }
 
     toggleFilter = () => {
