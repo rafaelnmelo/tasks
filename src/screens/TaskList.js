@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import AsyncStorage from '@react-native-community/async-storage'
-import axios from "axios"
+import axios from 'axios'
 
 import todayImage from '../../assets/imgs/today.jpg'
 import tomorrowImage from '../../assets/imgs/tomorrow.jpg'
@@ -69,25 +69,25 @@ export default class TaskList extends Component {
 
         this.setState({ visibleTasks })
         AsyncStorage.setItem('tasksState', JSON.stringify({
-             showDoneTasks: this.state.showDoneTasks
+            showDoneTasks: this.state.showDoneTasks
         }))
     }
 
-    addTask = newTask => {
+    addTask = async newTask => {
         if (!newTask.desc || !newTask.desc.trim()) {
             Alert.alert('Dados Inválidos', 'Descrição não informada!')
             return
         }
 
-        const tasks = [...this.state.tasks]
-        tasks.push({
-            id: Math.random(),
-            desc: newTask.desc,
-            estimateAt: newTask.date,
-            doneAt: null
-        })
-
-        this.setState({ tasks, showAddTask: false }, this.filterTasks)
+        try {
+            await axios.post(`${server}/tasks`, {
+                desc: newTask.desc,
+                estimateAt: newTask.date
+            })
+            this.setState({ showAddTask: false }, this.loadTasks)
+        } catch (error) {
+            showError(error)
+        }
     }
 
     loadTasks = async () => {
