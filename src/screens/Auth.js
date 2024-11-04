@@ -10,6 +10,7 @@ import backgroundImg from '../../assets/imgs/login.jpg'
 import commonStyles from "../commonStyles"
 import AuthInput from "../components/AuthInput"
 import { server, showError, showSuccess } from "../common"
+import { CommonActions } from '@react-navigation/native'
 
 const initialState = {
     name: '',
@@ -51,7 +52,17 @@ export default class Auth extends Component {
 
             axios.defaults.headers.common['Authorization'] = `bearer ${response.data.token}`
 
-            this.props.navigation.navigate('Home')
+            this.props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: 'Home',
+                            params: response.data,
+                        },
+                    ],
+                })
+            )
         } catch (error) {
             showError(error)
         }
