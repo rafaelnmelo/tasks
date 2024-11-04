@@ -25,8 +25,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         color: '#333',
-        marginLeft: 20,
-
+        marginLeft: 20
     },
     input: {
         marginLeft: 20,
