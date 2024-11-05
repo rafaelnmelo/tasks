@@ -1,10 +1,36 @@
 import React from 'react'
-import { Platform, View, Text, StyleSheet } from 'react-native'
-import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
+import {
+    Platform, View, Text,
+    StyleSheet, TouchableOpacity
+} from 'react-native'
+
+import {
+    DrawerContentScrollView, DrawerItemList
+} from '@react-navigation/drawer'
 import { Gravatar } from 'react-native-gravatar'
+import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { CommonActions } from '@react-navigation/native'
+
 import commonStyles from '../commonStyles'
 
 export default props => {
+
+    const logout = () => {
+        delete axios.defaults.headers.common['Authorization']
+        AsyncStorage.removeItem('userData')
+        props.navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [
+                    {
+                        name: 'Auth',
+                    }
+                ]
+            })
+        )
+    }
 
     return (
         <DrawerContentScrollView>
@@ -23,6 +49,11 @@ export default props => {
                         {props.email}
                     </Text>
                 </View>
+                <TouchableOpacity onPress={logout}>
+                    <View style={styles.logoutIcon}>
+                        <Icon name='sign-out' size={30} color='#800' />
+                    </View>
+                </TouchableOpacity>
             </View>
             <DrawerItemList {...props} />
         </DrawerContentScrollView>
@@ -64,5 +95,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: commonStyles.colors.subText,
         marginBottom: 10,
+    },
+    logoutIcon: {
+        marginLeft: 10,
+        marginBottom: 10
     }
 })
