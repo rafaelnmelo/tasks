@@ -5,6 +5,7 @@ import {
 } from "react-native"
 
 import axios from 'axios'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import backgroundImg from '../../assets/imgs/login.jpg'
 import commonStyles from "../commonStyles"
@@ -50,6 +51,7 @@ export default class Auth extends Component {
                 password: this.state.password
             })
 
+            AsyncStorage.setItem('userData', JSON.stringify(response.data))
             axios.defaults.headers.common['Authorization'] = `bearer ${response.data.token}`
 
             this.props.navigation.dispatch(
